@@ -12,7 +12,7 @@ conda install -c menpo opencv
 
 Training data (VID) and Test dataset (OTB).
 
-## Test
+### Test
 
 ```shell
 cd UDT_pytorch/track 
@@ -22,7 +22,7 @@ cd dataset & python gen_otb2013.py
 python UDT.py
 ```
 
-## Train
+### Train
 
 1. Download training data. ([**ILSVRC2015 VID**](http://bvisionweb1.cs.unc.edu/ilsvrc2015/download-videos-3j16.php#vid)) 
 
@@ -41,7 +41,7 @@ python UDT.py
    CUDA_VISIBLE_DEVICES=0,1,2,3 python train_UDT.py
    ```
 
-## Fine-tune hyper-parameter
+### Fine-tune hyper-parameter
 
 1. After training, you can simple test the model with default parameter.
 
@@ -57,7 +57,29 @@ python UDT.py
    python eval_otb.py OTB2013 * 0 10000
    ```
 
-## Citing UDT and DCFNet
+### License
+Licensed under an MIT license.
+
+### Citation
+If you find this work useful for your research, please consider citing our work and DCFNet:
+```
+@inproceedings{Wang_2019_Unsupervised,
+    title={Unsupervised Deep Tracking},
+    author={Wang, Ning and Song, Yibing and Ma, Chao and Zhou, Wengang and Liu, Wei and Li, Houqiang},
+    booktitle={The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+    year={2019}
+}
+
+@article{wang17dcfnet,
+    Author = {Qiang Wang, Jin Gao, Junliang Xing, Mengdan Zhang, Weiming Hu},
+    Title = {DCFNet: Discriminant Correlation Filters Network for Visual Tracking},
+    Journal = {arXiv preprint arXiv:1704.04057},
+    Year = {2017}
+}
+```
+
+### Contact
+If you have any questions, please feel free to contact wn6149@mail.ustc.edu.cn
 
 
 
