@@ -1,8 +1,6 @@
 # UDT_pytorch
 This repository contains a Python *reimplementation* of the **Unsupervised Deep Tracking** 
 
-**Unsupervised Deep Tracking**
-
 Ning Wang, Yibing Song, Chao Ma, Wengang Zhou, Wei Liu, and Houqiang Li 
 
 to appear in *CVPR 2019*
