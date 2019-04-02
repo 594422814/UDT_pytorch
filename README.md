@@ -3,10 +3,6 @@ This repository contains a Python *reimplementation* of the **Unsupervised Deep 
 
 ## Requirements
 
-```shell
-git clone --depth=1 https://github.com/foolwood/DCFNet_pytorch
-```
-
 Requirements for **PyTorch 0.4.0** and opencv-python
 
 ```shell
@@ -19,11 +15,11 @@ Training data (VID) and Test dataset (OTB).
 ## Test
 
 ```shell
-cd DCFNet_pytorch/track 
+cd UDT_pytorch/track 
 ln -s /path/to/your/OTB2015 ./dataset/OTB2015
 ln -s ./dataset/OTB2015 ./dataset/OTB2013
 cd dataset & python gen_otb2013.py
-python DCFNet.py
+python UDT.py
 ```
 
 ## Train
