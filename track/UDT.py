@@ -114,7 +114,7 @@ if __name__ == '__main__':
     videos = sorted(annos.keys())
 
     use_gpu = True
-    visualization = False
+    visualization = True
 
     # default parameter and load feature extractor network
     config = TrackerConfig()
