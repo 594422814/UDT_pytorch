@@ -7,10 +7,9 @@ to appear in *CVPR 2019*
 
 ### Acknowledges
 
-The results of this implementation may be slightly different from original [UDT](http://github.com/594422814/UDT). The results in our paper are obtained using the MatconvNet implementation.
+The results of this implementation may be slightly different from the original [UDT](http://github.com/594422814/UDT). The results in our paper are obtained using the MatconvNet implementation.
 
 Our baseline method is DCFNet and many parts of the code are from [DCFNet_pytorch](https://github.com/foolwood/DCFNet_pytorch). For more details, you can refer to [DCFNet_pytorch](https://github.com/foolwood/DCFNet_pytorch). The main differences are (1) we have easier and cleaner data preprocessing (please check the ```train/dataset/``` folder); (2) our training code utilizes forward tracking and backward verification to train the model in an unsupervised manner (please check the ```train/train_UDT.py``` file). 
-
 
 ### Requirements
 
