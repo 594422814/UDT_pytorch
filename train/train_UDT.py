@@ -108,7 +108,7 @@ if args.resume:
 cudnn.benchmark = True
 
 # training data
-crop_base_path = join('datasetNew', 'crop_{:d}_{:1.1f}'.format(args.input_sz, args.padding))
+crop_base_path = join('dataset', 'crop_{:d}_{:1.1f}'.format(args.input_sz, args.padding))
 if not isdir(crop_base_path):
     print('please run gen_training_data.py --output_size {:d} --padding {:.1f}!'.format(args.input_sz, args.padding))
     exit()
@@ -234,7 +234,6 @@ def validate(val_loader, model, criterion):
     batch_time = AverageMeter()
     losses = AverageMeter()
 
-    # switch to evaluate mode, therefore ''torch.no_grad()'' is unnecessary
     model.eval()
 
     with torch.no_grad():
@@ -249,6 +248,7 @@ def validate(val_loader, model, criterion):
             label = config.yf.repeat(args.batch_size*gpu_num,1,1,1,1).cuda(non_blocking=True)
   
             # forward tracking 1
+            # switch to evaluate mode, therefore ''torch.no_grad()'' is unnecessary
             s1_response = model(template, search1, label)
             # label transform
             peak, index = torch.max(s1_response.view(args.batch_size*gpu_num, -1), 1)
