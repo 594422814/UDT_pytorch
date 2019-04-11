@@ -57,7 +57,7 @@ python UDT.py
 
    ```shell
    cd UDT_pytorch/track/
-   python UDT --model ../train/work/crop_125_2.0/checkpoint.pth.tar
+   python UDT.py --model ../train/work/crop_125_2.0/checkpoint.pth.tar
    ```
 
 2. Search a better hyper-parameter.
