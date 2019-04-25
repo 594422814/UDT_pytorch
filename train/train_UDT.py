@@ -165,6 +165,8 @@ def train(train_loader, model, criterion, optimizer, epoch):
 
     # switch to train mode
     model.train()
+    label = config.yf.repeat(args.batch_size*gpu_num,1,1,1,1).cuda(non_blocking=True)
+    initial_y = config.y.copy()
 
     end = time.time()
     for i, (template, search1, search2) in enumerate(train_loader):
@@ -174,12 +176,19 @@ def train(train_loader, model, criterion, optimizer, epoch):
         template = template.cuda(non_blocking=True)
         search1 = search1.cuda(non_blocking=True)
         search2 = search2.cuda(non_blocking=True)
-        label = config.yf.repeat(args.batch_size*gpu_num,1,1,1,1).cuda(non_blocking=True)
-        initial_y = config.y.copy()
-    
+        
+        if gpu_num > 1:
+            template_feat = model.module.feature(template)
+            search1_feat = model.module.feature(search1)
+            search2_feat = model.module.feature(search2)
+        else:
+            template_feat = model.feature(template)
+            search1_feat = model.feature(search1)
+            search2_feat = model.feature(search2)
+
         # forward tracking 1
         with torch.no_grad():
-            s1_response = model(template, search1, label)
+            s1_response = model(template_feat, search1_feat, label)
         # label transform
         peak, index = torch.max(s1_response.view(args.batch_size*gpu_num, -1), 1)
         r_max, c_max = np.unravel_index(index, [config.output_sz, config.output_sz])
@@ -193,7 +202,7 @@ def train(train_loader, model, criterion, optimizer, epoch):
 
         # forward tracking 2
         with torch.no_grad():
-            s2_response = model(search1, search2, fake_yf)
+            s2_response = model(search1_feat, search2_feat, fake_yf)
         peak, index = torch.max(s2_response.view(args.batch_size*gpu_num, -1), 1)
         r_max, c_max = np.unravel_index(index, [config.output_sz, config.output_sz])
         fake_y = np.zeros((args.batch_size*gpu_num, 1, config.output_sz, config.output_sz))
@@ -204,7 +213,7 @@ def train(train_loader, model, criterion, optimizer, epoch):
         fake_yf = fake_yf.cuda(non_blocking=True)
     
         # backward tracking
-        output = model(search2, template, fake_yf)
+        output = model(search2_feat, template_feat, fake_yf)
         output = output_drop(output, target)  # the sample dropout is necessary, otherwise we find the loss tends to become unstable
 
         # consistency loss. target is the initial Gaussian label
@@ -235,6 +244,8 @@ def validate(val_loader, model, criterion):
     losses = AverageMeter()
 
     model.eval()
+    initial_y = config.y.copy()
+    label = config.yf.repeat(args.batch_size*gpu_num,1,1,1,1).cuda(non_blocking=True)
 
     with torch.no_grad():
         end = time.time()
@@ -244,12 +255,19 @@ def validate(val_loader, model, criterion):
             template = template.cuda(non_blocking=True)
             search1 = search1.cuda(non_blocking=True)
             search2 = search2.cuda(non_blocking=True)
-            initial_y = config.y.copy()
-            label = config.yf.repeat(args.batch_size*gpu_num,1,1,1,1).cuda(non_blocking=True)
-  
+            
+            if gpu_num > 1:
+                template_feat = model.module.feature(template)
+                search1_feat = model.module.feature(search1)
+                search2_feat = model.module.feature(search2)
+            else:
+                template_feat = model.feature(template)
+                search1_feat = model.feature(search1)
+                search2_feat = model.feature(search2)
+
             # forward tracking 1
             # switch to evaluate mode, therefore ''torch.no_grad()'' is unnecessary
-            s1_response = model(template, search1, label)
+            s1_response = model(template_feat, search1_feat, label)
             # label transform
             peak, index = torch.max(s1_response.view(args.batch_size*gpu_num, -1), 1)
             r_max, c_max = np.unravel_index(index, [config.output_sz, config.output_sz])
@@ -261,7 +279,7 @@ def validate(val_loader, model, criterion):
             fake_yf = fake_yf.cuda(non_blocking=True)
 
             # forward tracking 2
-            s2_response = model(search1, search2, fake_yf)
+            s2_response = model(search1_feat, search2_feat, fake_yf)
             peak, index = torch.max(s2_response.view(args.batch_size*gpu_num, -1), 1)
             r_max, c_max = np.unravel_index(index, [config.output_sz, config.output_sz])
             fake_y = np.zeros((args.batch_size*gpu_num, 1, config.output_sz, config.output_sz))
@@ -272,7 +290,7 @@ def validate(val_loader, model, criterion):
             fake_yf = fake_yf.cuda(non_blocking=True)
    
             # backward tracking
-            output = model(search2, template, fake_yf)
+            output = model(search2_feat, template_feat, fake_yf)
             output = output_drop(output, target)
             loss = criterion(output, target)/(args.batch_size * gpu_num)
 
