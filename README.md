@@ -29,7 +29,7 @@ cd UDT_pytorch/track
 ln -s /path/to/your/OTB2015 ./dataset/OTB2015
 ln -s ./dataset/OTB2015 ./dataset/OTB2013
 cd dataset & python gen_otb2013.py
-python UDT.py
+python UDT.py --model ../train/work/crop_125_2.0/checkpoint.pth.tar
 ```
 
 ### Train
