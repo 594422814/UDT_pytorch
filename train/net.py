@@ -38,8 +38,8 @@ class DCFNet(nn.Module):
         self.lambda0 = config.lambda0
 
     def forward(self, z, x, label):
-        z = self.feature(z)
-        x = self.feature(x)
+        # z = self.feature(z)
+        # x = self.feature(x)
         zf = torch.rfft(z, signal_ndim=2)
         xf = torch.rfft(x, signal_ndim=2)
 
